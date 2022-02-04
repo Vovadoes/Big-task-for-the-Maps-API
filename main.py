@@ -52,6 +52,18 @@ class MyWidget(QMainWindow):
             self.delta = round(max(0.001, self.delta), 3)
             self.setImage()
             print("Down", f'{self.delta=}')
+        if key.key() in (Qt.Key_W, Qt.Key_S, Qt.Key_A, Qt.Key_D):
+            d = 0.0005
+            if key.key() == Qt.Key_W:
+                self.coords = (self.coords[0], round(self.coords[1] + d, 6))
+            if key.key() == Qt.Key_S:
+                self.coords = (self.coords[0], round(self.coords[1] - d, 6))
+            if key.key() == Qt.Key_A:
+                self.coords = (round(self.coords[0] - d, 6), self.coords[1])
+            if key.key() == Qt.Key_D:
+                self.coords = (round(self.coords[0] + d, 6), self.coords[1])
+            self.setImage()
+            print(f'{self.coords=}')
 
 
 if __name__ == '__main__':
