@@ -1,15 +1,17 @@
 import requests
+import json
 
 
-def find_name(name):
+def find_name(name, ischeck):
     geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&geocode={name}&format=json"
 
     # Выполняем запрос.
     response = requests.get(geocoder_request)
-    if response:
+    try:
         # Преобразуем ответ в json-объект
         json_response = response.json()
-
+        with open('data.json', 'w') as outfile:
+            json.dump(json_response, outfile)
         # Получаем первый топоним из ответа геокодера.
         # Согласно описанию ответа, он находится по следующему пути:
         toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
@@ -19,6 +21,11 @@ def find_name(name):
         toponym_coodrinates = toponym["Point"]["pos"]
         # Печатаем извлечённые из ответа поля:
         print(toponym_address, "имеет координаты:", toponym_coodrinates)
-        return toponym_coodrinates
-    else:
+        if ischeck:
+            return toponym_coodrinates, toponym_address + ', ' + \
+                   toponym["metaDataProperty"]["GeocoderMetaData"]['Address']['postal_code']
+        else:
+            return toponym_coodrinates, toponym_address
+    except:
         print("Ошибка выполнения запроса:")
+        return 1

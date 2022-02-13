@@ -22,27 +22,58 @@ class MyWidget(QMainWindow):
         self.delta = 0.006
         uic.loadUi('untitled.ui', self)  # Загружаем дизайн
         self.map_layer = 'map'
+        self.label_2.setText("Чебоксарский залив, Чебоксары, Чувашская Республика, Россия")
+        self.name_coords = ['Чебоксарский залив, Чебоксары, Чувашская Республика, Россия']
         self.pushButton.clicked.connect(self.run)
         self.pushButton_2.clicked.connect(self.run_2)
+        self.pushButton_3.clicked.connect(self.resetting_the_search_result)
         self.button_group = QButtonGroup()
         self.button_group.setExclusive(False)
         self.button_group.addButton(self.radioButton)
         self.button_group.buttonClicked.connect(self.stop_ever)
         self.setImage()
 
+    def mousePressEvent(self, event):  # нужно сделать!!!!
+        x = event.pos().x()
+        y = event.pos().y()
+        if 20 <= x <= 660 and 50 <= y <= 490:
+            x, y = x-20, y-50
+            print(x, y)  # пиксели на изображении!
+            # x_size, y_size = (self.delta / 641,
+            #                   self.delta / 441)
+            # self.coords = ((self.coords[0] - self.delta) -
+            #                x_size * (x - 20), (self.coords[1] - self.delta) -
+            #                y_size * (y - 50))
+            # self.points.append(self.coords)
+            # self.setImage()
+
+    def resetting_the_search_result(self):
+        if len(self.points) != 1:
+            self.points = self.points[:-1]
+            self.coords = self.points[-1]
+            self.name_coords = self.name_coords[:-1]
+            self.label_2.setText(self.name_coords[-1])
+        self.setImage()
+
     def stop_ever(self, button):
         self.pushButton.setEnabled(False)
         self.pushButton_2.setEnabled(False)
         self.radioButton.setEnabled(False)
+        self.pushButton_3.setEnabled(False)
 
     def run_2(self):
         name, ok_pressed = QInputDialog.getText(self, "Выбор точек",
                                                 "Введите название объекта")
         if ok_pressed:
-            name = find_name(name).split()
-            self.coords = (float(name[0]), float(name[1]))
-            self.points.append(self.coords)
-            self.setImage()
+            name = find_name(name, self.radioButton_2.isChecked())
+            if name != 1:
+                name1 = name[0].split()
+                name2 = name[1]
+                self.coords = (float(name1[0]), float(name1[1]))
+                self.points.append(self.coords)
+                self.setImage()
+                self.label_2.setText(name2)
+                self.name_coords.append(name2)
 
     def run(self):
         country, ok_pressed = QInputDialog.getItem(
@@ -58,7 +89,6 @@ class MyWidget(QMainWindow):
             self.setImage()
 
     def getImage(self):
-
         # Собираем параметры для запроса к StaticMapsAPI:
         map_params = {
             "ll": ",".join(map(str, self.coords)),  # почему то не центр
@@ -89,6 +119,7 @@ class MyWidget(QMainWindow):
             self.pushButton.setEnabled(True)
             self.pushButton_2.setEnabled(True)
             self.radioButton.setEnabled(True)
+            self.pushButton_3.setEnabled(True)
         if key.key() == Qt.Key_Escape:
             self.close()
         if key.key() == Qt.Key_Up:  # увеличиваем размер
@@ -116,6 +147,16 @@ class MyWidget(QMainWindow):
             self.coords = (round(self.coords[0] + d, 6), self.coords[1])
             self.setImage()
         print(f'{self.coords=}')
+
+
+# def searchByMapClick(self, coords_mouse):
+#     x_size, y_size = (float(self.mashtab.toPlainText()) / 641,
+#                       float(self.mashtab.toPlainText()) / 441)
+#     new_ask = ','.join(
+#         (str((float(self.edit_x.toPlainText()) - float(self.mashtab.toPlainText())) -
+#              x_size * (coords_mouse[0] - 10)),
+#          str((float(self.edit_y.toPlainText()) - float(self.mashtab.toPlainText())) -
+#              y_size * (coords_mouse[1] - 10))))
 
 
 if __name__ == '__main__':
