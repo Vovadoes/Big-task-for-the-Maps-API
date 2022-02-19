@@ -13,13 +13,16 @@ from functions import find_name
 
 
 # 47.152165, 56.131877
+
+# 0.013691 0.006
 class MyWidget(QMainWindow):
     def __init__(self):
         super().__init__()
         self.map_file = "map.png"
         self.coords = (47.247691, 56.147098)
-        self.points = [(47.247691, 56.147098)]
+        self.points = [(47.247691, 56.147098), (47.234, 56.147098), (47.247691, 56.142000)]
         self.delta = 0.006
+        self.size_img = 441
         uic.loadUi('untitled.ui', self)  # Загружаем дизайн
         self.map_layer = 'map'
         self.label_2.setText("Чебоксарский залив, Чебоксары, Чувашская Республика, Россия")
@@ -36,16 +39,22 @@ class MyWidget(QMainWindow):
     def mousePressEvent(self, event):  # нужно сделать!!!!
         x = event.pos().x()
         y = event.pos().y()
-        if 20 <= x <= 660 and 50 <= y <= 490:
-            x, y = x-20, y-50
+        if 20 <= x <= 490 and 50 <= y <= 490:
+            x, y = x - 20, y - 50
+            x, y = x - self.size_img // 2, y - self.size_img // 2
+            # изменяем систему координат
+            #      ^
+            #      |
+            #      |
+            # ----------->
+            #      |
+            #      |
+            # где середина ноль x, y
+            k = self.delta / (self.size_img // 2)  # Количество радиан в 1 пикселе
             print(x, y)  # пиксели на изображении!
-            # x_size, y_size = (self.delta / 641,
-            #                   self.delta / 441)
-            # self.coords = ((self.coords[0] - self.delta) -
-            #                x_size * (x - 20), (self.coords[1] - self.delta) -
-            #                y_size * (y - 50))
-            # self.points.append(self.coords)
-            # self.setImage()
+            coords = (round(self.coords[0] + k * x, 6),
+                      round(self.coords[1] - k * y, 6))  # Высчитываем координаты, - + как направления осей
+            print(f"{coords=}")
 
     def resetting_the_search_result(self):
         if len(self.points) != 1:
@@ -94,7 +103,7 @@ class MyWidget(QMainWindow):
             "ll": ",".join(map(str, self.coords)),  # почему то не центр
             "spn": ",".join([str(self.delta), str(self.delta)]),
             "l": self.map_layer,
-            'size': '641,441',
+            'size': f'{self.size_img},{self.size_img}',
             'pt': "~".join([f'{i[0]},{i[1]}' for i in self.points]),
         }
 
