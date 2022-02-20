@@ -20,7 +20,7 @@ class MyWidget(QMainWindow):
         super().__init__()
         self.map_file = "map.png"
         self.coords = (47.247691, 56.147098)
-        self.points = [(47.247691, 56.147098), (47.234, 56.147098), (47.247691, 56.142000)]
+        self.points = []
         self.delta = 0.006
         self.size_img = 441
         uic.loadUi('untitled.ui', self)  # Загружаем дизайн
@@ -41,7 +41,7 @@ class MyWidget(QMainWindow):
         if name != 1:
             name1 = name[0].split()
             name2 = name[1]
-            self.coords = (float(name1[0]), float(name1[1]))
+            self.coords = (round(float(name1[0]), 6), round(float(name1[1]), 6))
             self.points = self.points[:-1]
             self.points.append(self.coords)
             self.setImage()
@@ -65,9 +65,10 @@ class MyWidget(QMainWindow):
             k = self.delta / (self.size_img // 2)  # Количество радиан в 1 пикселе
             print(x, y)  # пиксели на изображении!
             coords = (round(self.coords[0] + k * x, 6),
-                      round(self.coords[1] - k * y,
-                            6))  # Высчитываем координаты, - + как направления осей
-            print(f"{coords=}")
+                      round(self.coords[1] - k * y, 6))
+            # Высчитываем координаты, - + как направления осей
+            print(f"old {self.coords=}")
+            print(f"new {coords=}")
             self.geo_find_obj(coords[0], coords[1])
 
     def resetting_the_search_result(self):
