@@ -9,7 +9,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtWidgets import *
-from functions import find_name
+from functions import find_name, find_object
 
 
 # 47.152165, 56.131877
@@ -36,6 +36,18 @@ class MyWidget(QMainWindow):
         self.button_group.buttonClicked.connect(self.stop_ever)
         self.setImage()
 
+    def geo_find_obj(self, x, y):
+        name = find_name(find_object(x, y), self.radioButton_2.isChecked())
+        if name != 1:
+            name1 = name[0].split()
+            name2 = name[1]
+            self.coords = (float(name1[0]), float(name1[1]))
+            self.points = self.points[:-1]
+            self.points.append(self.coords)
+            self.setImage()
+            self.label_2.setText(name2)
+            self.name_coords.append(name2)
+
     def mousePressEvent(self, event):  # нужно сделать!!!!
         x = event.pos().x()
         y = event.pos().y()
@@ -53,8 +65,10 @@ class MyWidget(QMainWindow):
             k = self.delta / (self.size_img // 2)  # Количество радиан в 1 пикселе
             print(x, y)  # пиксели на изображении!
             coords = (round(self.coords[0] + k * x, 6),
-                      round(self.coords[1] - k * y, 6))  # Высчитываем координаты, - + как направления осей
+                      round(self.coords[1] - k * y,
+                            6))  # Высчитываем координаты, - + как направления осей
             print(f"{coords=}")
+            self.geo_find_obj(coords[0], coords[1])
 
     def resetting_the_search_result(self):
         if len(self.points) != 1:
@@ -69,6 +83,7 @@ class MyWidget(QMainWindow):
         self.pushButton_2.setEnabled(False)
         self.radioButton.setEnabled(False)
         self.pushButton_3.setEnabled(False)
+        self.radioButton_2.setEnabled(False)
 
     def run_2(self):
         name, ok_pressed = QInputDialog.getText(self, "Выбор точек",
@@ -79,6 +94,8 @@ class MyWidget(QMainWindow):
                 name1 = name[0].split()
                 name2 = name[1]
                 self.coords = (float(name1[0]), float(name1[1]))
+                if len(self.points) != 0:
+                    self.points = self.points[:-1]
                 self.points.append(self.coords)
                 self.setImage()
                 self.label_2.setText(name2)
@@ -100,7 +117,7 @@ class MyWidget(QMainWindow):
     def getImage(self):
         # Собираем параметры для запроса к StaticMapsAPI:
         map_params = {
-            "ll": ",".join(map(str, self.coords)),  # почему то не центр
+            "ll": ",".join(map(str, self.coords)),
             "spn": ",".join([str(self.delta), str(self.delta)]),
             "l": self.map_layer,
             'size': f'{self.size_img},{self.size_img}',
@@ -129,6 +146,7 @@ class MyWidget(QMainWindow):
             self.pushButton_2.setEnabled(True)
             self.radioButton.setEnabled(True)
             self.pushButton_3.setEnabled(True)
+            self.radioButton_2.setEnabled(True)
         if key.key() == Qt.Key_Escape:
             self.close()
         if key.key() == Qt.Key_Up:  # увеличиваем размер

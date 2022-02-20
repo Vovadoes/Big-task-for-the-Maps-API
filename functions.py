@@ -29,3 +29,20 @@ def find_name(name, ischeck):
     except:
         print("Ошибка выполнения запроса:")
         return 1
+
+
+def find_object(x, y):
+    geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey=40d1649f-0493-4b70-98ba-98533de7710b&geocode={x},{y}&format=json"
+
+    # Выполняем запрос.
+    response = requests.get(geocoder_request)
+    try:
+        # Преобразуем ответ в json-объект
+        json_response = response.json()
+        with open('data.json', 'w', encoding='utf-8') as outfile:
+            json.dump(json_response, outfile)
+        s1 = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject'][
+            'metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+        return s1
+    except:
+        print('не получилось')
