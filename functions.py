@@ -46,3 +46,31 @@ def find_object(x, y):
         return s1
     except:
         print('не получилось')
+
+
+def find_organisation(x, y, text):
+    search_api_server = "https://search-maps.yandex.ru/v1/"
+    api_key = "dda3ddba-c9ea-4ead-9010-f43fbc15c6e3"
+
+    address_ll = f"{x},{y}"
+    print(text)
+    search_params = {
+        "apikey": api_key,
+        "text": str(text),
+        "lang": "ru_RU",
+        "ll": address_ll,
+        'rspn': 1,
+        'spn': '0.00045, 0.00045'
+    }
+
+    response = requests.get(search_api_server, params=search_params)
+    json_response = response.json()
+    with open('data.json', 'w', encoding='utf-8') as outfile:
+        json.dump(json_response, outfile, indent=2, ensure_ascii=False)
+    if json_response['properties']['ResponseMetaData']['SearchResponse']['found'] != 0:
+        z1 = json_response['features'][0]['properties']
+        name = z1['name']
+        adres = z1['description']
+        return [name + ', ' + adres, json_response['features'][0]['geometry']['coordinates']]
+    else:
+        return 0

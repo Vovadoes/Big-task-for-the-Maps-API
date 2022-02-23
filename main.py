@@ -1,6 +1,6 @@
 import sys
 from io import BytesIO
-
+import json
 import requests as requests
 from PIL import Image
 from PIL.ImageQt import ImageQt
@@ -9,7 +9,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtWidgets import *
-from functions import find_name, find_object
+from functions import find_name, find_object, find_organisation
 
 
 # 47.152165, 56.131877
@@ -20,7 +20,8 @@ class MyWidget(QMainWindow):
         super().__init__()
         self.map_file = "map.png"
         self.coords = (47.247691, 56.147098)
-        self.points = [(47.247691, 56.147098), (47.234, 56.147098), (47.247691, 56.142000)]
+        self.points = [(47.247691, 56.147098)]
+        self.points_2 = [(47.247691, 56.147098)]
         self.delta = 0.006
         self.size_img = 441
         uic.loadUi('untitled.ui', self)  # Загружаем дизайн
@@ -44,9 +45,23 @@ class MyWidget(QMainWindow):
             self.coords = (float(name1[0]), float(name1[1]))
             self.points = self.points[:-1]
             self.points.append(self.coords)
+            self.points_2.append(self.coords)
             self.setImage()
             self.label_2.setText(name2)
             self.name_coords.append(name2)
+
+    def geo_find_obj_2(self, x, y):
+        text = find_name(find_object(x, y), self.radioButton_2.isChecked())
+        name = find_organisation(x, y, text)
+        if name != 0:
+            name, coord = name[0], name[1]
+            self.coords = coord
+            self.points = self.points[:-1]
+            self.points.append(self.coords)
+            self.points_2.append(self.coords)
+            self.setImage()
+            self.label_2.setText(name)
+            self.name_coords.append(name)
 
     def mousePressEvent(self, event):  # нужно сделать!!!!
         x = event.pos().x()
@@ -68,12 +83,16 @@ class MyWidget(QMainWindow):
                       round(self.coords[1] - k * y,
                             6))  # Высчитываем координаты, - + как направления осей
             print(f"{coords=}")
-            self.geo_find_obj(coords[0], coords[1])
+            if event.button() == Qt.LeftButton:
+                self.geo_find_obj(coords[0], coords[1])
+            else:
+                self.geo_find_obj_2(coords[0], coords[1])
 
     def resetting_the_search_result(self):
-        if len(self.points) != 1:
-            self.points = self.points[:-1]
-            self.coords = self.points[-1]
+        if len(self.points_2) != 1:
+            self.points_2 = self.points_2[:-1]
+            self.coords = self.points_2[-1]
+            self.points = [self.points_2[-1]]
             self.name_coords = self.name_coords[:-1]
             self.label_2.setText(self.name_coords[-1])
         self.setImage()
@@ -97,6 +116,7 @@ class MyWidget(QMainWindow):
                 if len(self.points) != 0:
                     self.points = self.points[:-1]
                 self.points.append(self.coords)
+                self.points_2.append(self.coords)
                 self.setImage()
                 self.label_2.setText(name2)
                 self.name_coords.append(name2)
