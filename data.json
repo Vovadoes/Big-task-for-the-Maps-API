@@ -3,162 +3,35 @@
   "properties": {
     "ResponseMetaData": {
       "SearchResponse": {
-        "found": 2,
+        "found": 0,
         "display": "multiple",
         "boundedBy": [
           [
-            47.24724145,
-            56.14375745
+            47.2449768,
+            56.14186077
           ],
           [
-            47.24814055,
-            56.14465655
+            47.2485732,
+            56.14545717
           ]
         ]
       },
       "SearchRequest": {
-        "request": "('47.247907 56.144657', 'Россия, Чувашская Республика, Чебоксары, улица Композиторов Воробьёвых, 20')",
+        "request": "('47.246695 56.143719', 'Россия, Чувашская Республика, Чебоксары, Президентский бульвар, 5/17')",
         "skip": 0,
         "results": 10,
         "boundedBy": [
           [
-            47.247466,
-            56.143982
+            47.246811,
+            56.143516
           ],
           [
-            47.247916,
-            56.144432
+            47.247261,
+            56.143966
           ]
         ]
       }
     }
   },
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          47.247524,
-          56.144253
-        ]
-      },
-      "properties": {
-        "name": "Типография",
-        "description": "ул. Композиторов Воробьёвых, 20, Чебоксары, Россия",
-        "boundedBy": [
-          [
-            47.2434185,
-            56.14196093
-          ],
-          [
-            47.2516295,
-            56.14654493
-          ]
-        ],
-        "CompanyMetaData": {
-          "id": "90050911036",
-          "name": "Типография",
-          "address": "Россия, Чувашская Республика, Чебоксары, улица Композиторов Воробьёвых, 20",
-          "Categories": [
-            {
-              "class": "printing services",
-              "name": "Типография"
-            }
-          ],
-          "Hours": {
-            "text": "пн-сб 10:00–20:00; вс 10:00–19:00",
-            "Availabilities": [
-              {
-                "Intervals": [
-                  {
-                    "from": "10:00:00",
-                    "to": "20:00:00"
-                  }
-                ],
-                "Monday": true,
-                "Tuesday": true,
-                "Wednesday": true,
-                "Thursday": true,
-                "Friday": true,
-                "Saturday": true
-              },
-              {
-                "Intervals": [
-                  {
-                    "from": "10:00:00",
-                    "to": "19:00:00"
-                  }
-                ],
-                "Sunday": true
-              }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          47.247537,
-          56.144258
-        ]
-      },
-      "properties": {
-        "name": "Окна",
-        "description": "ул. Композиторов Воробьёвых, 20, Чебоксары, Россия",
-        "boundedBy": [
-          [
-            47.2434315,
-            56.14196593
-          ],
-          [
-            47.2516425,
-            56.14654993
-          ]
-        ],
-        "CompanyMetaData": {
-          "id": "213540584335",
-          "name": "Окна",
-          "address": "Россия, Чувашская Республика, Чебоксары, улица Композиторов Воробьёвых, 20",
-          "Categories": [
-            {
-              "class": "office service",
-              "name": "Офис продаж"
-            }
-          ],
-          "Hours": {
-            "text": "пн-сб 10:00–20:00; вс 10:00–19:00",
-            "Availabilities": [
-              {
-                "Intervals": [
-                  {
-                    "from": "10:00:00",
-                    "to": "20:00:00"
-                  }
-                ],
-                "Monday": true,
-                "Tuesday": true,
-                "Wednesday": true,
-                "Thursday": true,
-                "Friday": true,
-                "Saturday": true
-              },
-              {
-                "Intervals": [
-                  {
-                    "from": "10:00:00",
-                    "to": "19:00:00"
-                  }
-                ],
-                "Sunday": true
-              }
-            ]
-          }
-        }
-      }
-    }
-  ]
+  "features": []
 }
